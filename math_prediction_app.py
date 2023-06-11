@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 import pickle
 import altair as alt
-from sklearn.linear_model import LinearRegression
 
+# Writing the app title and description
 st.write("""
          # Prediction of Mathematic Result
 """)
@@ -14,6 +14,7 @@ st.write('Based on your input, Your Mathematic Result is : ')
 
 st.sidebar.header('User Input Parameters')
 
+# Get user input for parameters
 def user_input_features(): 
     Gender = st.sidebar.selectbox('Gender', ('female', 'male'))
     EthnicGroup = st.sidebar.selectbox('Ethnic Group', ('group A', 'group B', 'group C', 'group D', 'group E'))
@@ -39,6 +40,7 @@ def user_input_features():
 
 input_df = user_input_features()
 
+# Combining user input with entire dataset
 data_raw = pd.read_csv("./Result based on student's background.csv")
 data = data_raw.drop(columns=['Unnamed: 0', 'MathScore', 'IsFirstChild', 'NrSiblings', 'TransportMeans', 'ParentMaritalStatus'])
 df = pd.concat([input_df,data],axis=0)
@@ -55,14 +57,18 @@ df = df[:1] # Selects only the first row (the user input data)
 # Loading model
 load_clf = pickle.load(open('mathematic_result_prediction.pkl', 'rb'))
 
+# Make prediction
 prediction = load_clf.predict(df)
 
+# Normalize the result
 if(prediction>100): 
     prediction = 100
 
+# Print result
 result = np.round(prediction[0], 2)
 st.write('''## ''', result, ''' ##''')
 
+# Plotting the result
 data = pd.DataFrame({
     'Mathematic Result': prediction, 
     'Your Result': 'Mathematic Result'
@@ -78,6 +84,7 @@ bars = alt.Chart(data).mark_bar().encode(
     width=550
 )
 
+# Display bar chart
 chart = alt.vconcat(bars,  title="Mathematic Result Prediction")
 st.altair_chart(chart, use_container_width=True)
 
