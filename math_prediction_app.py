@@ -62,7 +62,7 @@ prediction = load_clf.predict(df)
 
 # Normalize the result
 if(prediction>100): 
-    prediction = 100
+    prediction[0] = 100
 
 # Print result
 result = np.round(prediction[0], 2)
