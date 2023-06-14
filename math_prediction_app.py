@@ -17,7 +17,6 @@ st.sidebar.header('User Input Parameters')
 # Get user input for parameters
 def user_input_features(): 
     Gender = st.sidebar.selectbox('Gender', ('female', 'male'))
-    EthnicGroup = st.sidebar.selectbox('Ethnic Group', ('group A', 'group B', 'group C', 'group D', 'group E'))
     LunchType = st.sidebar.selectbox('Lunch Type', ('free/reduced', 'standard'))
     TestPrep = st.sidebar.selectbox('Test Preparation Course', ('completed', 'none'))
     ParentEduc = st.sidebar.selectbox('Parental Level of Education', ("associate's degree", "bachelor's degree", 'high school', "master's degree", 'some college', 'some high school'))
@@ -28,7 +27,6 @@ def user_input_features():
     data = {'ReadingScore': ReadingScore, 
             'WritingScore': WritingScore,
             'Gender': Gender, 
-            'EthnicGroup': EthnicGroup,
             'ParentEduc': ParentEduc, 
             'LunchType': LunchType,
             'TestPrep': TestPrep,
@@ -42,11 +40,11 @@ input_df = user_input_features()
 
 # Combining user input with entire dataset
 data_raw = pd.read_csv("./Result based on student's background.csv")
-data = data_raw.drop(columns=['Unnamed: 0', 'MathScore', 'IsFirstChild', 'NrSiblings', 'TransportMeans', 'ParentMaritalStatus'])
+data = data_raw.drop(columns=['Unnamed: 0', 'MathScore', 'IsFirstChild', 'NrSiblings', 'TransportMeans', 'ParentMaritalStatus', 'EthnicGroup'])
 df = pd.concat([input_df,data],axis=0)
 
 # Encoding of input variables
-encode = ['Gender', 'EthnicGroup', 'ParentEduc', 'LunchType', 'TestPrep', 'PracticeSport', 'WklyStudyHours']
+encode = ['Gender', 'ParentEduc', 'LunchType', 'TestPrep', 'PracticeSport', 'WklyStudyHours']
 for col in encode:
     dummy = pd.get_dummies(df[col], prefix=col)
     df = pd.concat([df,dummy], axis=1)
